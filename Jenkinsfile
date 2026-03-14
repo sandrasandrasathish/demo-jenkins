@@ -16,20 +16,20 @@ pipeline {
         }
 
         stage('Build & Deploy') {
-            steps {
-                configFileProvider([configFile(fileId: 'maven-github-settings', variable: 'MAVEN_SETTINGS')]) {
+    steps {
+        configFileProvider([configFile(fileId: 'maven-github-settings', variable: 'MAVEN_SETTINGS')]) {
 
-                    bat """
-                    set GH_USER=%GITHUB_CREDS_USR%
-                    set GH_TOKEN=%GITHUB_CREDS_PSW%
+            bat '''
+            set GH_USER=%GITHUB_CREDS_USR%
+            set GH_TOKEN=%GITHUB_CREDS_PSW%
 
-                    "%MAVEN_HOME%\\bin\\mvn.cmd" -s %MAVEN_SETTINGS% -B clean package
-                    "%MAVEN_HOME%\\bin\\mvn.cmd" -s %MAVEN_SETTINGS% -B deploy
-                    """
+            call "%MAVEN_HOME%\\bin\\mvn.cmd" -s %MAVEN_SETTINGS% -B clean package
+            call "%MAVEN_HOME%\\bin\\mvn.cmd" -s %MAVEN_SETTINGS% -B deploy
+            '''
 
-                }
-            }
         }
+    }
+}
     }
 
     post {
