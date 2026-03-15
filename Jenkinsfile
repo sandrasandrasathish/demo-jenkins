@@ -32,21 +32,21 @@ pipeline {
         }
 
         stage('Deploy to EC2') {
-            steps {
-                sshagent(['ec2-key']) {
-                    bat '''
-                    echo Copying JAR to EC2...
-                    scp -o StrictHostKeyChecking=no target\\demo-1.0.0.jar ubuntu@54.174.123.249:/opt/app/
+    steps {
+        sshagent(['ec2-key']) {
+            bat '''
+            echo Copying JAR to EC2...
+            scp -o StrictHostKeyChecking=no target\\demo-1.0.0.jar ubuntu@54.174.123.249:/opt/app/
 
-                    echo Stopping old app...
-                    ssh -o StrictHostKeyChecking=no ubuntu@54.174.123.249 "pkill -f demo-1.0.0.jar || true"
+            echo Stopping old app...
+            ssh -o StrictHostKeyChecking=no ubuntu@54.174.123.249 "pkill -f demo-1.0.0.jar || true"
 
-                    echo Starting new app...
-                    ssh -o StrictHostKeyChecking=no ubuntu@54.174.123.249 "nohup java -jar /opt/app/demo-1.0.0.jar > /opt/app/app.log 2>&1 &"
-                    '''
-                }
-            }
+            echo Starting new app...
+            ssh -o StrictHostKeyChecking=no ubuntu@54.174.123.249 "nohup java -jar /opt/app/demo-1.0.0.jar > /opt/app/app.log 2>&1 &"
+            '''
         }
+    }
+}
 
     }
 
